@@ -165,8 +165,8 @@ def build_index():
     o.write('<p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>\n')
     o.write('<h1>Pick a time for your sukkah</h1>\n')
     o.write('<p class="how">Tap the time that works for you &mdash; it opens a WhatsApp '
-            'message to us with that time already filled in. Times that are already taken '
-            'are not shown.</p>\n')
+            'message to us with that time already filled in, and we&rsquo;ll lock it in. '
+            'Times that are already taken are not shown.</p>\n')
     o.write('<p class="countdown" id="countdown"></p>\n')
 
     for label, slots, tag in DAYS:
@@ -185,8 +185,8 @@ def build_index():
 
     # Static form — Netlify parses this at deploy; nothing here is JS-generated.
     o.write('<h2 class="sec">Or send your details</h2>\n')
-    o.write('<p class="lede">Prefer a form? Send your name and the time you want and '
-            'we&rsquo;ll lock it in.</p>\n')
+    o.write('<p class="lede">Prefer a form? Send your name and the time you want, and '
+            'we&rsquo;ll confirm it.</p>\n')
     o.write('<form name="sukkah-booking" method="POST" data-netlify="true" '
             'netlify-honeypot="bot-field" action="/thanks.html">\n')
     o.write('  <p class="hp"><label>Skip this field <input name="bot-field" '
@@ -208,7 +208,7 @@ def build_index():
 
     o.write('<div class="foot">\n<p class="lbl">Or just call</p>\n')
     o.write('<a class="tel" href="tel:+%s">%s</a>\n' % (PHONE, e(PHONE_DISPLAY)))
-    o.write('<p>Free estimate. We build across Brooklyn, Monsey and the tri-state area.</p>\n')
+    o.write('<p>Any questions about your build, just reach out.</p>\n')
     o.write('</div>\n</div>\n')
 
     o.write("""<script>
@@ -252,8 +252,8 @@ def build_thanks():
     o.write('<div class="wrap">\n')
     o.write('<p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>\n')
     o.write('<h1>We got it</h1>\n')
-    o.write('<p class="how">We&rsquo;ll be in touch shortly to confirm your time and give you '
-            'a price. If it&rsquo;s urgent, call or WhatsApp us.</p>\n')
+    o.write('<p class="how">We&rsquo;ll confirm your time shortly. If you need to change it '
+            'or something comes up, call or WhatsApp us.</p>\n')
     o.write('<div class="foot" style="margin-top:26px">\n<p class="lbl">Call or WhatsApp</p>\n')
     o.write('<a class="tel" href="tel:+%s">%s</a>\n' % (PHONE, e(PHONE_DISPLAY)))
     o.write('<p><a href="/" style="color:inherit">&larr; Back to the times</a></p>\n')
