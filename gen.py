@@ -213,7 +213,7 @@ def build_index():
             'autocomplete="name"></label>\n')
     o.write('  <label>Phone number<input type="tel" name="phone" required '
             'autocomplete="tel"></label>\n')
-    o.write('  <label>Address where the sukkah goes<input type="text" name="address" '
+    o.write('  <label>Address<input type="text" name="address" '
             'required autocomplete="street-address"></label>\n')
     o.write('  <label>Anything else?<textarea name="notes"></textarea></label>\n')
     o.write('  <button type="submit" disabled>Book this time</button>\n')
