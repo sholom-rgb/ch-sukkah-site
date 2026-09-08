@@ -37,29 +37,37 @@
     font-family:"Work Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
     font-size:16px; line-height:1.55; padding:26px 18px 56px;
   }
-  .wrap{max-width:640px;margin:0 auto}
+  .wrap{max-width:900px;margin:0 auto}
   .eyebrow{
     font-family:"Space Mono",ui-monospace,monospace;font-size:11px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;
   }
   h1{
     font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
-    letter-spacing:.005em;font-size:clamp(34px,9vw,54px);line-height:.98;
+    letter-spacing:.005em;font-size:clamp(34px,7vw,54px);line-height:.98;
     margin:0 0 14px;text-wrap:balance;
   }
   h2.sec{
     font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
-    font-size:26px;line-height:1;margin:36px 0 6px;letter-spacing:.005em;
+    font-size:27px;line-height:1;margin:38px 0 6px;letter-spacing:.005em;
   }
-  .how{border-left:3px solid var(--accent);padding:2px 0 2px 13px;margin:0 0 8px;font-size:15.5px}
-  .countdown{
-    font-family:"Space Mono",ui-monospace,monospace;font-size:12px;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-    margin:0 0 26px;font-variant-numeric:tabular-nums;
-  }
-  .lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+  .how{border-left:3px solid var(--accent);padding:2px 0 2px 13px;margin:0 0 22px;font-size:15.5px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:15px}
 
-  .day{border:1px solid var(--rule-2);background:var(--panel);margin-bottom:14px}
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--rule);border:1px solid var(--rule);margin:0 0 26px;
+  }
+  .stat{background:var(--paper);padding:14px 16px}
+  .stat .n{
+    font-family:Anton,Impact,sans-serif;font-size:36px;line-height:1;display:block;
+    margin-bottom:5px;font-variant-numeric:tabular-nums;
+  }
+  .stat.hot .n{color:var(--accent)}
+  .stat .k{font-size:12px;color:var(--muted)}
+
+  .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:16px}
+  .day{border:1px solid var(--rule-2);background:var(--panel)}
   .day-hd{
     padding:12px 15px;border-bottom:1px solid var(--rule-2);
     display:flex;align-items:baseline;justify-content:space-between;gap:10px;
@@ -74,21 +82,20 @@
     background:var(--tag-bg);padding:4px 7px;white-space:nowrap;
   }
   .times{display:flex;flex-direction:column;gap:1px;background:var(--rule)}
-  a.slot{
-    background:var(--panel);color:inherit;text-decoration:none;
+  .slot{
+    background:var(--panel);
     display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:15px;min-height:56px;
   }
-  a.slot .t{
+  .slot .t{
     font-family:"Space Mono",ui-monospace,monospace;font-size:14px;font-weight:700;
     letter-spacing:.02em;font-variant-numeric:tabular-nums;
   }
-  a.slot .go{
+  .slot .go{
     font-family:"Space Mono",ui-monospace,monospace;font-size:10.5px;font-weight:700;
     letter-spacing:.08em;text-transform:uppercase;color:var(--accent);white-space:nowrap;
   }
-  a.slot:hover,a.slot:focus-visible{background:var(--accent);color:var(--on-accent)}
-  a.slot:hover .go,a.slot:focus-visible .go{color:var(--on-accent)}
+
 
   form{border:1px solid var(--rule-2);background:var(--panel);padding:16px;display:grid;gap:12px}
   label{display:grid;gap:5px;font-size:13px;font-weight:600}
@@ -97,21 +104,21 @@
     background:var(--field);color:var(--ink);border:1px solid var(--rule-2);border-radius:0;
   }
   textarea{min-height:78px;resize:vertical}
-  button{
+  button[type=submit]{
     font-family:"Space Mono",ui-monospace,monospace;font-size:12px;font-weight:700;
     letter-spacing:.09em;text-transform:uppercase;padding:14px;cursor:pointer;
     background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);
   }
-  button:hover{opacity:.9}
+  button[type=submit]:hover{opacity:.9}
   .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
-  .foot{border-top:2px solid var(--ink);margin-top:34px;padding-top:18px}
+  .foot{border-top:2px solid var(--ink);margin-top:40px;padding-top:18px}
   .foot .lbl{
     font-family:"Space Mono",ui-monospace,monospace;font-size:11px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;
   }
   .foot a.tel{
-    font-family:Anton,Impact,sans-serif;font-size:clamp(34px,9vw,48px);line-height:1;
+    font-family:Anton,Impact,sans-serif;font-size:clamp(34px,8vw,48px);line-height:1;
     color:inherit;text-decoration:none;display:inline-block;font-variant-numeric:tabular-nums;
   }
   .foot a.tel:hover{color:var(--accent)}
@@ -123,126 +130,130 @@
 <div class="wrap">
 <p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>
 <h1>Pick a time for your sukkah</h1>
-<p class="how">Tap the time that works for you &mdash; it opens a WhatsApp message to us with that time already filled in, and we&rsquo;ll lock it in. Times that are already taken are not shown.</p>
-<p class="countdown" id="countdown"></p>
+<p class="how">These are the times we still have open. Give us a call to take one. If none of them work for you, send us a request at the bottom.</p>
+<div class="stats" id="stats"></div>
+<div class="board">
 <section class="day">
 <div class="day-hd"><h3>Tue Sep 15</h3></div>
 <div class="times">
-<a class="slot" data-slot="Tue Sep 15, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Tue%20Sep%2015%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Tue Sep 15, 12:00 PM – 4:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Tue%20Sep%2015%2C%2012%3A00%20PM%20%E2%80%93%204%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Tue Sep 15, 4:00 PM – 8:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Tue%20Sep%2015%2C%204%3A00%20PM%20%E2%80%93%208%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Tue Sep 15, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Tue Sep 15, 12:00 PM – 4:00 PM"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Tue Sep 15, 4:00 PM – 8:00 PM"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
 <section class="day">
 <div class="day-hd"><h3>Wed Sep 16</h3></div>
 <div class="times">
-<a class="slot" data-slot="Wed Sep 16, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Wed%20Sep%2016%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Wed Sep 16, 12:00 PM – 4:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Wed%20Sep%2016%2C%2012%3A00%20PM%20%E2%80%93%204%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Wed Sep 16, 4:00 PM – 8:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Wed%20Sep%2016%2C%204%3A00%20PM%20%E2%80%93%208%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Wed Sep 16, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Wed Sep 16, 12:00 PM – 4:00 PM"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Wed Sep 16, 4:00 PM – 8:00 PM"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
 <section class="day">
 <div class="day-hd"><h3>Thu Sep 17</h3></div>
 <div class="times">
-<a class="slot" data-slot="Thu Sep 17, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Thu%20Sep%2017%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Thu Sep 17, 12:00 PM – 4:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Thu%20Sep%2017%2C%2012%3A00%20PM%20%E2%80%93%204%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Thu Sep 17, 4:00 PM – 8:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Thu%20Sep%2017%2C%204%3A00%20PM%20%E2%80%93%208%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Thu Sep 17, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Thu Sep 17, 12:00 PM – 4:00 PM"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Thu Sep 17, 4:00 PM – 8:00 PM"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
 <section class="day">
 <div class="day-hd"><h3>Fri Sep 18</h3><span class="tag">Half day</span></div>
 <div class="times">
-<a class="slot" data-slot="Fri Sep 18, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Fri%20Sep%2018%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Fri Sep 18, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
 <section class="day">
 <div class="day-hd"><h3>Tue Sep 22</h3></div>
 <div class="times">
-<a class="slot" data-slot="Tue Sep 22, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Tue%20Sep%2022%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Tue Sep 22, 12:00 PM – 4:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Tue%20Sep%2022%2C%2012%3A00%20PM%20%E2%80%93%204%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Tue Sep 22, 4:00 PM – 8:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Tue%20Sep%2022%2C%204%3A00%20PM%20%E2%80%93%208%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Tue Sep 22, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Tue Sep 22, 12:00 PM – 4:00 PM"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Tue Sep 22, 4:00 PM – 8:00 PM"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
 <section class="day">
 <div class="day-hd"><h3>Wed Sep 23</h3></div>
 <div class="times">
-<a class="slot" data-slot="Wed Sep 23, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Wed%20Sep%2023%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Wed Sep 23, 12:00 PM – 4:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Wed%20Sep%2023%2C%2012%3A00%20PM%20%E2%80%93%204%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Wed Sep 23, 4:00 PM – 8:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Wed%20Sep%2023%2C%204%3A00%20PM%20%E2%80%93%208%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Wed Sep 23, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Wed Sep 23, 12:00 PM – 4:00 PM"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Wed Sep 23, 4:00 PM – 8:00 PM"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
 <section class="day">
 <div class="day-hd"><h3>Thu Sep 24</h3></div>
 <div class="times">
-<a class="slot" data-slot="Thu Sep 24, 8:00 AM – 12:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Thu%20Sep%2024%2C%208%3A00%20AM%20%E2%80%93%2012%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Thu Sep 24, 12:00 PM – 4:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Thu%20Sep%2024%2C%2012%3A00%20PM%20%E2%80%93%204%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Request &rarr;</span></a>
-<a class="slot" data-slot="Thu Sep 24, 4:00 PM – 8:00 PM" href="https://wa.me/13478316599?text=Hi%2C%20I%27d%20like%20to%20book%20my%20sukkah%20for%20Thu%20Sep%2024%2C%204%3A00%20PM%20%E2%80%93%208%3A00%20PM." target="_blank" rel="noopener noreferrer"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Request &rarr;</span></a>
+<div class="slot" data-slot="Thu Sep 24, 8:00 AM – 12:00 PM"><span class="t">8:00 AM – 12:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Thu Sep 24, 12:00 PM – 4:00 PM"><span class="t">12:00 PM – 4:00 PM</span><span class="go">Open</span></div>
+<div class="slot" data-slot="Thu Sep 24, 4:00 PM – 8:00 PM"><span class="t">4:00 PM – 8:00 PM</span><span class="go">Open</span></div>
 </div>
 </section>
-<h2 class="sec">Or send your details</h2>
-<p class="lede">Prefer a form? Send your name and the time you want, and we&rsquo;ll confirm it.</p>
-<form name="sukkah-booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thanks.html">
+</div>
+<h2 class="sec">None of these times work?</h2>
+<p class="lede">Tell us the days and times that suit you and we&rsquo;ll do our best to fit you in.</p>
+<form name="sukkah-other-time" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thanks.html">
   <p class="hp"><label>Skip this field <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
   <label>Your name<input type="text" name="name" required autocomplete="name"></label>
   <label>Phone<input type="tel" name="phone" required autocomplete="tel"></label>
-  <label>Which time?<select name="preferred_time" id="time-select" required>
-    <option value="">Choose a time</option>
-    <option data-slot="Tue Sep 15, 8:00 AM – 12:00 PM">Tue Sep 15, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Tue Sep 15, 12:00 PM – 4:00 PM">Tue Sep 15, 12:00 PM – 4:00 PM</option>
-    <option data-slot="Tue Sep 15, 4:00 PM – 8:00 PM">Tue Sep 15, 4:00 PM – 8:00 PM</option>
-    <option data-slot="Wed Sep 16, 8:00 AM – 12:00 PM">Wed Sep 16, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Wed Sep 16, 12:00 PM – 4:00 PM">Wed Sep 16, 12:00 PM – 4:00 PM</option>
-    <option data-slot="Wed Sep 16, 4:00 PM – 8:00 PM">Wed Sep 16, 4:00 PM – 8:00 PM</option>
-    <option data-slot="Thu Sep 17, 8:00 AM – 12:00 PM">Thu Sep 17, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Thu Sep 17, 12:00 PM – 4:00 PM">Thu Sep 17, 12:00 PM – 4:00 PM</option>
-    <option data-slot="Thu Sep 17, 4:00 PM – 8:00 PM">Thu Sep 17, 4:00 PM – 8:00 PM</option>
-    <option data-slot="Fri Sep 18, 8:00 AM – 12:00 PM">Fri Sep 18, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Tue Sep 22, 8:00 AM – 12:00 PM">Tue Sep 22, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Tue Sep 22, 12:00 PM – 4:00 PM">Tue Sep 22, 12:00 PM – 4:00 PM</option>
-    <option data-slot="Tue Sep 22, 4:00 PM – 8:00 PM">Tue Sep 22, 4:00 PM – 8:00 PM</option>
-    <option data-slot="Wed Sep 23, 8:00 AM – 12:00 PM">Wed Sep 23, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Wed Sep 23, 12:00 PM – 4:00 PM">Wed Sep 23, 12:00 PM – 4:00 PM</option>
-    <option data-slot="Wed Sep 23, 4:00 PM – 8:00 PM">Wed Sep 23, 4:00 PM – 8:00 PM</option>
-    <option data-slot="Thu Sep 24, 8:00 AM – 12:00 PM">Thu Sep 24, 8:00 AM – 12:00 PM</option>
-    <option data-slot="Thu Sep 24, 12:00 PM – 4:00 PM">Thu Sep 24, 12:00 PM – 4:00 PM</option>
-    <option data-slot="Thu Sep 24, 4:00 PM – 8:00 PM">Thu Sep 24, 4:00 PM – 8:00 PM</option>
-  </select></label>
-  <label>Anything else?<textarea name="notes"></textarea></label>
+  <label>When would work for you?<textarea name="when_works" required placeholder="For example: any morning the week of Sep 21, or Sunday afternoon"></textarea></label>
   <button type="submit">Send my request</button>
 </form>
 <div class="foot">
-<p class="lbl">Or just call</p>
+<p class="lbl">For any questions or more information</p>
 <a class="tel" href="tel:+13478316599">347-831-6599</a>
-<p>Any questions about your build, just reach out.</p>
+<p>Call or text anytime.</p>
 </div>
 </div>
 <script>
 (function(){
-  // Hide slots already taken. booked.json is a plain list you edit; if it is
-  // missing or unreadable every slot stays visible, which fails safe.
+  var PER_SLOT = 2;
+  var stats = document.getElementById("stats");
+
+  // Recomputed from today's date on every load, so it stays right on its own.
+  function daysToSukkos(){
+    var start = new Date(2026, 8, 25);   // Fri Sep 25 2026 — Sukkos begins that evening
+    var now = new Date();
+    return Math.round((start - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+  }
+  function dayLabel(d){
+    if (d > 1)   return { n: d, k: "Days to erev Sukkos" };
+    if (d === 1) return { n: 1, k: "Day to erev Sukkos" };
+    if (d === 0) return { n: 0, k: "Erev Sukkos is today" };
+    return { n: 0, k: "Sukkos has begun" };
+  }
+  // Each visible window still holds PER_SLOT jobs, minus any already taken.
+  function renderStats(taken){
+    taken = taken || {};
+    var open = 0;
+    document.querySelectorAll(".slot").forEach(function(el){
+      var n = taken[el.getAttribute("data-slot")] || 0;
+      open += Math.max(0, PER_SLOT - n);
+    });
+    var d = dayLabel(daysToSukkos());
+    stats.innerHTML =
+      '<div class="stat"><span class="n">' + open + '</span>' +
+      '<span class="k">Slots still open</span></div>' +
+      '<div class="stat hot"><span class="n">' + d.n + '</span>' +
+      '<span class="k">' + d.k + '</span></div>';
+  }
+  renderStats();
+
+  // A window with all its slots taken comes off the board. Missing or bad
+  // file: everything stays visible, which fails toward showing too much.
   fetch("booked.json", {cache:"no-store"}).then(function(r){
     return r.ok ? r.json() : null;
   }).then(function(data){
-    var full = (data && data.full) || [];
-    if (!full.length) return;
-    full.forEach(function(key){
+    var taken = (data && data.taken) || {};
+    Object.keys(taken).forEach(function(key){
+      if ((taken[key] || 0) < PER_SLOT) return;
       document.querySelectorAll('[data-slot="' + CSS.escape(key) + '"]').forEach(function(el){
         el.remove();
       });
     });
     document.querySelectorAll("section.day").forEach(function(sec){
-      if (!sec.querySelector("a.slot")) sec.remove();
+      if (!sec.querySelector(".slot")) sec.remove();
     });
-  }).catch(function(){ /* keep every slot visible */ });
-
-  var start = new Date(2026, 8, 25);   // Fri Sep 25 2026 — Sukkos begins that evening
-  var now = new Date();
-  var days = Math.round((start - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
-  var el = document.getElementById("countdown");
-  if (!el) return;
-  el.textContent = days > 1 ? days + " days until Sukkos"
-                 : days === 1 ? "Sukkos begins tomorrow evening"
-                 : days === 0 ? "Sukkos begins this evening" : "";
+    renderStats(taken);
+  }).catch(function(){ /* leave every time showing */ });
 })();
 </script>
 </body>

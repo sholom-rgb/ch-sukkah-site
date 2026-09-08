@@ -37,29 +37,37 @@
     font-family:"Work Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
     font-size:16px; line-height:1.55; padding:26px 18px 56px;
   }
-  .wrap{max-width:640px;margin:0 auto}
+  .wrap{max-width:900px;margin:0 auto}
   .eyebrow{
     font-family:"Space Mono",ui-monospace,monospace;font-size:11px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;
   }
   h1{
     font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
-    letter-spacing:.005em;font-size:clamp(34px,9vw,54px);line-height:.98;
+    letter-spacing:.005em;font-size:clamp(34px,7vw,54px);line-height:.98;
     margin:0 0 14px;text-wrap:balance;
   }
   h2.sec{
     font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
-    font-size:26px;line-height:1;margin:36px 0 6px;letter-spacing:.005em;
+    font-size:27px;line-height:1;margin:38px 0 6px;letter-spacing:.005em;
   }
-  .how{border-left:3px solid var(--accent);padding:2px 0 2px 13px;margin:0 0 8px;font-size:15.5px}
-  .countdown{
-    font-family:"Space Mono",ui-monospace,monospace;font-size:12px;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-    margin:0 0 26px;font-variant-numeric:tabular-nums;
-  }
-  .lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+  .how{border-left:3px solid var(--accent);padding:2px 0 2px 13px;margin:0 0 22px;font-size:15.5px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:15px}
 
-  .day{border:1px solid var(--rule-2);background:var(--panel);margin-bottom:14px}
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--rule);border:1px solid var(--rule);margin:0 0 26px;
+  }
+  .stat{background:var(--paper);padding:14px 16px}
+  .stat .n{
+    font-family:Anton,Impact,sans-serif;font-size:36px;line-height:1;display:block;
+    margin-bottom:5px;font-variant-numeric:tabular-nums;
+  }
+  .stat.hot .n{color:var(--accent)}
+  .stat .k{font-size:12px;color:var(--muted)}
+
+  .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:16px}
+  .day{border:1px solid var(--rule-2);background:var(--panel)}
   .day-hd{
     padding:12px 15px;border-bottom:1px solid var(--rule-2);
     display:flex;align-items:baseline;justify-content:space-between;gap:10px;
@@ -74,21 +82,20 @@
     background:var(--tag-bg);padding:4px 7px;white-space:nowrap;
   }
   .times{display:flex;flex-direction:column;gap:1px;background:var(--rule)}
-  a.slot{
-    background:var(--panel);color:inherit;text-decoration:none;
+  .slot{
+    background:var(--panel);
     display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:15px;min-height:56px;
   }
-  a.slot .t{
+  .slot .t{
     font-family:"Space Mono",ui-monospace,monospace;font-size:14px;font-weight:700;
     letter-spacing:.02em;font-variant-numeric:tabular-nums;
   }
-  a.slot .go{
+  .slot .go{
     font-family:"Space Mono",ui-monospace,monospace;font-size:10.5px;font-weight:700;
     letter-spacing:.08em;text-transform:uppercase;color:var(--accent);white-space:nowrap;
   }
-  a.slot:hover,a.slot:focus-visible{background:var(--accent);color:var(--on-accent)}
-  a.slot:hover .go,a.slot:focus-visible .go{color:var(--on-accent)}
+
 
   form{border:1px solid var(--rule-2);background:var(--panel);padding:16px;display:grid;gap:12px}
   label{display:grid;gap:5px;font-size:13px;font-weight:600}
@@ -97,21 +104,21 @@
     background:var(--field);color:var(--ink);border:1px solid var(--rule-2);border-radius:0;
   }
   textarea{min-height:78px;resize:vertical}
-  button{
+  button[type=submit]{
     font-family:"Space Mono",ui-monospace,monospace;font-size:12px;font-weight:700;
     letter-spacing:.09em;text-transform:uppercase;padding:14px;cursor:pointer;
     background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);
   }
-  button:hover{opacity:.9}
+  button[type=submit]:hover{opacity:.9}
   .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
-  .foot{border-top:2px solid var(--ink);margin-top:34px;padding-top:18px}
+  .foot{border-top:2px solid var(--ink);margin-top:40px;padding-top:18px}
   .foot .lbl{
     font-family:"Space Mono",ui-monospace,monospace;font-size:11px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;
   }
   .foot a.tel{
-    font-family:Anton,Impact,sans-serif;font-size:clamp(34px,9vw,48px);line-height:1;
+    font-family:Anton,Impact,sans-serif;font-size:clamp(34px,8vw,48px);line-height:1;
     color:inherit;text-decoration:none;display:inline-block;font-variant-numeric:tabular-nums;
   }
   .foot a.tel:hover{color:var(--accent)}
@@ -123,9 +130,9 @@
 <div class="wrap">
 <p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>
 <h1>We got it</h1>
-<p class="how">We&rsquo;ll confirm your time shortly. If you need to change it or something comes up, call or WhatsApp us.</p>
+<p class="how">We&rsquo;ll confirm your time shortly. If you need to change it or something comes up, call or text us.</p>
 <div class="foot" style="margin-top:26px">
-<p class="lbl">Call or WhatsApp</p>
+<p class="lbl">For any questions or more information</p>
 <a class="tel" href="tel:+13478316599">347-831-6599</a>
 <p><a href="/" style="color:inherit">&larr; Back to the times</a></p>
 </div>

@@ -1,4 +1,4 @@
 {
-  "_comment": "Times already taken. Add a slot's exact text here to remove it from the site. Copy it verbatim from the page, including the en-dash in the time range.",
-  "full": []
+  "_comment": "How many of the 2 slots in each time window are taken. 2 removes that window from the site; 1 leaves it showing with one slot left.",
+  "taken": {}
 }
