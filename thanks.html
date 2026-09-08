@@ -89,13 +89,16 @@
   }
   button.slot:hover,button.slot:focus-visible{background:var(--accent);color:var(--on-accent)}
   button.slot:hover .go,button.slot:focus-visible .go{color:var(--on-accent)}
-  button.slot[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
-  button.slot[aria-pressed="true"] .go{color:var(--on-accent)}
-  .picked{
-    font-family:"Space Mono",ui-monospace,monospace;font-size:13px;font-weight:700;
-    background:var(--field);border:1px solid var(--rule-2);padding:11px;
+  button.slot[aria-expanded="true"]{background:var(--accent);color:var(--on-accent)}
+  button.slot[aria-expanded="true"] .go{color:var(--on-accent)}
+  .slotwrap{background:var(--panel)}
+  .drawer{padding:0 15px 15px}
+  .drawer form{border:0;background:transparent;padding:0;gap:10px}
+  button[type=submit]:disabled{opacity:.45;cursor:not-allowed}
+  .needed{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:10px;font-weight:700;
+    letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:center;
   }
-  .picked.none{color:var(--muted);font-weight:400}
   .slot .t{
     font-family:"Space Mono",ui-monospace,monospace;font-size:14px;font-weight:700;
     letter-spacing:.02em;font-variant-numeric:tabular-nums;

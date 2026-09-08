@@ -108,13 +108,16 @@ CSS = """
   }
   button.slot:hover,button.slot:focus-visible{background:var(--accent);color:var(--on-accent)}
   button.slot:hover .go,button.slot:focus-visible .go{color:var(--on-accent)}
-  button.slot[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
-  button.slot[aria-pressed="true"] .go{color:var(--on-accent)}
-  .picked{
-    font-family:"Space Mono",ui-monospace,monospace;font-size:13px;font-weight:700;
-    background:var(--field);border:1px solid var(--rule-2);padding:11px;
+  button.slot[aria-expanded="true"]{background:var(--accent);color:var(--on-accent)}
+  button.slot[aria-expanded="true"] .go{color:var(--on-accent)}
+  .slotwrap{background:var(--panel)}
+  .drawer{padding:0 15px 15px}
+  .drawer form{border:0;background:transparent;padding:0;gap:10px}
+  button[type=submit]:disabled{opacity:.45;cursor:not-allowed}
+  .needed{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:10px;font-weight:700;
+    letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:center;
   }
-  .picked.none{color:var(--muted);font-weight:400}
   .slot .t{
     font-family:"Space Mono",ui-monospace,monospace;font-size:14px;font-weight:700;
     letter-spacing:.02em;font-variant-numeric:tabular-nums;
@@ -179,8 +182,8 @@ def build_index():
     o.write('<div class="wrap">\n')
     o.write('<p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>\n')
     o.write('<h1>Pick a time for your sukkah</h1>\n')
-    o.write('<p class="how">Tap the time you want, then fill in your details below. '
-            'We&rsquo;ll confirm it.</p>\n')
+    o.write('<p class="how">Tap the time you want and fill in your details right '
+            'there. We&rsquo;ll confirm it.</p>\n')
     o.write('<div class="stats" id="stats"></div>\n')
 
     o.write('<div class="board">\n')
@@ -192,23 +195,20 @@ def build_index():
         for s in slots:
             t = SLOTS[s]
             key = "%s, %s" % (label, t)
-            o.write('<button type="button" class="slot" data-slot="%s" aria-pressed="false">'
-                    '<span class="t">%s</span><span class="go">Choose</span></button>\n'
-                    % (e(key), e(t)))
+            o.write('<div class="slotwrap">'
+                    '<button type="button" class="slot" data-slot="%s" aria-expanded="false">'
+                    '<span class="t">%s</span><span class="go">Choose</span></button>'
+                    '<div class="drawer" data-for="%s" hidden></div></div>\n'
+                    % (e(key), e(t), e(key)))
         o.write('</div>\n</section>\n')
     o.write('</div>\n')
 
-    o.write('<h2 class="sec">Your details</h2>\n')
-    o.write('<p class="lede">Tap a time above, then fill this in.</p>\n')
+    o.write('<div id="form-home" hidden>\n')
     o.write('<form name="sukkah-booking" method="POST" data-netlify="true" '
             'netlify-honeypot="bot-field" action="/thanks.html">\n')
     o.write('  <p class="hp"><label>Skip this field <input name="bot-field" '
             'tabindex="-1" autocomplete="off"></label></p>\n')
-    o.write('  <label>Time you picked\n')
-    o.write('    <div class="picked none" id="picked">No time chosen yet &mdash; '
-            'tap one above</div>\n')
-    o.write('    <input type="hidden" name="time" id="time-field" value="">\n')
-    o.write('  </label>\n')
+    o.write('  <input type="hidden" name="time" id="time-field" value="">\n')
     o.write('  <label>Your name<input type="text" name="name" required '
             'autocomplete="name"></label>\n')
     o.write('  <label>Phone number<input type="tel" name="phone" required '
@@ -216,8 +216,9 @@ def build_index():
     o.write('  <label>Address where the sukkah goes<input type="text" name="address" '
             'required autocomplete="street-address"></label>\n')
     o.write('  <label>Anything else?<textarea name="notes"></textarea></label>\n')
-    o.write('  <button type="submit">Book this time</button>\n')
+    o.write('  <button type="submit" disabled>Book this time</button>\n')
     o.write('</form>\n')
+    o.write('</div>\n')
 
     o.write('<h2 class="sec">None of these times work?</h2>\n')
     o.write('<p class="lede">Tell us the days and times that suit you and we&rsquo;ll '
@@ -294,31 +295,47 @@ def build_index():
     renderStats(taken);
   }).catch(function(){ /* leave every time showing */ });
 
-  // Tapping a time fills the booking form.
-  var picked = document.getElementById("picked");
-  var field  = document.getElementById("time-field");
+  // One form, moved into whichever time is tapped.
   var form   = document.querySelector('form[name="sukkah-booking"]');
+  var field  = document.getElementById("time-field");
+  var submit = form.querySelector('button[type=submit]');
+  var note   = document.createElement("p");
+  note.className = "needed";
+  note.textContent = "Name, phone and address are all needed";
+  form.appendChild(note);
+
+  function refresh(){ submit.disabled = !form.checkValidity(); }
+  form.addEventListener("input", refresh);
+
+  function closeDrawers(){
+    document.querySelectorAll(".drawer").forEach(function(d){ d.hidden = true; });
+    document.querySelectorAll("button.slot").forEach(function(b){
+      b.setAttribute("aria-expanded", "false");
+    });
+  }
+
   document.addEventListener("click", function(ev){
     var btn = ev.target.closest("button.slot");
     if (!btn) return;
-    document.querySelectorAll("button.slot").forEach(function(b){
-      b.setAttribute("aria-pressed", b === btn ? "true" : "false");
-    });
-    var val = btn.getAttribute("data-slot");
-    field.value = val;
-    picked.textContent = val;
-    picked.classList.remove("none");
-    form.scrollIntoView({ behavior: "smooth", block: "start" });
+    var key  = btn.getAttribute("data-slot");
+    var open = btn.getAttribute("aria-expanded") === "true";
+    closeDrawers();
+    if (open) return;                       // tapping the open one shuts it
+
+    var drawer = document.querySelector('.drawer[data-for="' + CSS.escape(key) + '"]');
+    drawer.appendChild(form);
+    drawer.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    field.value = key;
+    form.reset();
+    field.value = key;                      // reset() clears it, so set it again
+    refresh();
     var first = form.querySelector('input[name="name"]');
-    if (first) setTimeout(function(){ first.focus({ preventScroll: true }); }, 420);
+    if (first) first.focus({ preventScroll: true });
+    drawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
-  form.addEventListener("submit", function(ev){
-    if (field.value) return;
-    ev.preventDefault();
-    picked.textContent = "Please tap a time above first";
-    picked.classList.remove("none");
-    document.querySelector(".board").scrollIntoView({ behavior:"smooth", block:"start" });
-  });
+
+  refresh();
 })();
 </script>
 </body>
