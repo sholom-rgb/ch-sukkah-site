@@ -235,7 +235,8 @@ def build_index():
     o.write('  <label>When would work for you?<textarea name="when_works" required '
             'placeholder="For example: any morning the week of Sep 21, or Sunday '
             'afternoon"></textarea></label>\n')
-    o.write('  <button type="submit">Send my request</button>\n')
+    o.write('  <button type="submit" disabled>Send my request</button>\n')
+    o.write('  <p class="needed">Name, phone and when you&rsquo;re free are all needed</p>\n')
     o.write('</form>\n')
 
     o.write('<div class="foot">\n<p class="lbl">For any questions or more '
