@@ -1,4 +1,6 @@
 {
   "_comment": "Overrides the automatic count for any time listed here. 0 puts a time back on the list (use after a cancellation), 1 leaves one slot, 2 removes it. Times not listed use the automatic count.",
-  "taken": {}
+  "taken": {
+    "Thu Sep 24, 4:00 PM – 8:00 PM": 0
+  }
 }
