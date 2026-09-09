@@ -4,5 +4,5 @@ import { readJobs, publicCounts, json } from "./_shared.mjs";
 // give a whole window to also disappears from the public site.
 export default async () => {
   const jobs = await readJobs();
-  return json({ taken: publicCounts(jobs) });
+  return json({ taken: publicCounts(jobs), v: 2 });
 };
