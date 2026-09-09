@@ -5,12 +5,13 @@ import { readJobsDetailed, publicCounts, json, readNote, whereAmI } from "./_sha
 export default async (req) => {
   const url = new URL(req.url);
 
-  const { jobs, errors, listed } = await readJobsDetailed();
+  const { jobs, errors, listed, indexed } = await readJobsDetailed();
   const out = { taken: publicCounts(jobs), v: 3 };
   if (url.searchParams.get("debug") === "1") {
     out.debug = {
       jobCount: Object.keys(jobs).length,
       blobsListed: listed,
+      indexed,
       errors,
       lastSubmission: await readNote(),
       readingFrom: whereAmI(),

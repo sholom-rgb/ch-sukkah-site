@@ -34,22 +34,51 @@ export function store() {
 }
 
 const PREFIX = "job/";
+const INDEX = "job-index";
 
 /**
- * Each job is its own blob. Nothing does read-modify-write on a shared list,
- * so two bookings landing at once cannot erase each other — which is exactly
- * what a single "all the jobs" blob allowed.
+ * Listing keys turned out to be unreliable here — it repeatedly returned only
+ * part of what had been written, which silently broke capacity checks and
+ * counts. So the set of job ids is kept in one record and read by exact key,
+ * which is consistent. Listing is still consulted as a safety net in case the
+ * index ever misses one.
  */
-/**
- * Reads every job AND reports what went wrong doing it. The previous version
- * swallowed storage errors, so a failure was indistinguishable from "no
- * bookings" — which is precisely what made this impossible to diagnose.
- */
+async function readIndex() {
+  try {
+    const ids = await store().get(INDEX, { type: "json" });
+    return Array.isArray(ids) ? ids : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Add an id, then confirm it stuck. Two writes at once can clobber. */
+export async function addToIndex(id) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const ids = await readIndex();
+    if (ids.includes(id)) return true;
+    await store().setJSON(INDEX, ids.concat(id));
+    const check = await readIndex();
+    if (check.includes(id)) return true;
+  }
+  return false;
+}
+
+export async function removeFromIndex(id) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const ids = await readIndex();
+    if (!ids.includes(id)) return true;
+    await store().setJSON(INDEX, ids.filter((x) => x !== id));
+    const check = await readIndex();
+    if (!check.includes(id)) return true;
+  }
+  return false;
+}
+
 export async function readJobsDetailed() {
   const s = store();
   const out = {};
   const errors = [];
-  let listed = 0;
 
   try {
     const legacy = await s.get(KEY, { type: "json" });
@@ -58,28 +87,53 @@ export async function readJobsDetailed() {
     errors.push("legacy-get: " + (e?.message || String(e)));
   }
 
+  const ids = await readIndex();
+
+  // Listing is only a backstop now; anything it finds that the index missed
+  // still counts, and anything it misses the index still covers.
+  let listedKeys = [];
   try {
     const res = await s.list({ prefix: PREFIX });
-    const blobs = res?.blobs || [];
-    listed = blobs.length;
-    const loaded = await Promise.all(
-      blobs.map((b) =>
-        s.get(b.key, { type: "json" }).catch((e) => {
-          errors.push("get " + b.key + ": " + (e?.message || String(e)));
-          return null;
-        })
-      )
-    );
-    loaded.forEach((j) => { if (j && j.id) out[j.id] = j; });
+    listedKeys = (res?.blobs || []).map((b) => b.key.slice(PREFIX.length));
   } catch (e) {
     errors.push("list: " + (e?.message || String(e)));
   }
 
-  return { jobs: out, errors, listed };
+  const wanted = Array.from(new Set(ids.concat(listedKeys)));
+  const loaded = await Promise.all(
+    wanted.map((id) =>
+      s.get(PREFIX + id, { type: "json" }).catch((e) => {
+        errors.push("get " + id + ": " + (e?.message || String(e)));
+        return null;
+      })
+    )
+  );
+  loaded.forEach((j) => { if (j && j.id) out[j.id] = j; });
+
+  return { jobs: out, errors, listed: listedKeys.length, indexed: ids.length };
 }
 
 export async function readJobs() {
   return (await readJobsDetailed()).jobs;
+}
+
+/** Write one job and make sure the index knows about it. */
+export async function writeJob(job) {
+  await store().setJSON(PREFIX + job.id, job);
+  await addToIndex(job.id);
+}
+
+export async function deleteJob(id) {
+  const s = store();
+  await removeFromIndex(id);
+  await s.delete(PREFIX + id).catch(() => {});
+  try {
+    const legacy = await s.get(KEY, { type: "json" });
+    if (legacy && legacy[id]) {
+      delete legacy[id];
+      await s.setJSON(KEY, legacy);
+    }
+  } catch { /* no legacy blob */ }
 }
 
 /** Leaves a breadcrumb so a failed submission is visible instead of silent. */
