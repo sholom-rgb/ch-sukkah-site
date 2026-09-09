@@ -101,17 +101,9 @@ export async function readJobsDetailed() {
 
   const wanted = Array.from(new Set(ids.concat(listedKeys)));
 
-  // Anything listing found that the index doesn't know about gets adopted, so
-  // jobs written before the index existed stop depending on listing.
-  const missing = listedKeys.filter((id) => !ids.includes(id));
-  if (missing.length) {
-    try {
-      const merged = Array.from(new Set(ids.concat(missing)));
-      await s.setJSON(INDEX, merged);
-    } catch (e) {
-      errors.push("index-heal: " + (e?.message || String(e)));
-    }
-  }
+  // Deliberately NOT adopting listed-but-unindexed ids any more: listing lags
+  // behind deletions, so adopting would put a job you just deleted straight
+  // back. The index is the record of what exists.
   const loaded = await Promise.all(
     wanted.map((id) =>
       s.get(PREFIX + id, { type: "json" }).catch((e) => {
