@@ -545,6 +545,21 @@ document.addEventListener("click", async ev => {
 
 if (!token()) renderGate();
 else load();
+
+// The page used to load jobs only when opened or after a save, so a booking
+// made elsewhere never appeared until a manual reload — which is what made it
+// look like bookings came and went. Refresh on returning to the page, and
+// quietly in the background, but never while a form or picker is open.
+function safeToRefresh(){
+  return (view.mode === "day" || view.mode === "job") && token();
+}
+function quietRefresh(){
+  if (document.visibilityState !== "visible" || !safeToRefresh()) return;
+  load();
+}
+document.addEventListener("visibilitychange", quietRefresh);
+window.addEventListener("focus", quietRefresh);
+setInterval(quietRefresh, 20000);
 </script>
 </body>
 </html>
