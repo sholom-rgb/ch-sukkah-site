@@ -264,14 +264,10 @@
   // to the moment a form is submitted. booked.json stays as a manual override
   // you can still edit by hand; whichever says a time is fuller wins. If both
   // fail, every time stays visible — it fails toward showing too much.
-  function merge(a, b){
-    var out = {};
-    [a, b].forEach(function(src){
-      Object.keys(src || {}).forEach(function(k){
-        out[k] = Math.max(out[k] || 0, src[k] || 0);
-      });
-    });
-    return out;
+  // booked.json OVERRIDES the live count for any time it names — so a cancelled
+  // job can be set back to 0 and the time returns to the list.
+  function merge(live, manual){
+    return Object.assign({}, live || {}, manual || {});
   }
   function grab(url){
     return fetch(url, {cache:"no-store"})

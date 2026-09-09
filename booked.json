@@ -1,4 +1,4 @@
 {
-  "_comment": "How many of the 2 slots in each time window are taken. 2 removes that window from the site; 1 leaves it showing with one slot left.",
+  "_comment": "Overrides the automatic count for any time listed here. 0 puts a time back on the list (use after a cancellation), 1 leaves one slot, 2 removes it. Times not listed use the automatic count.",
   "taken": {}
 }

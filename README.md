@@ -25,9 +25,9 @@ phone:
 { "taken": { "Tue Sep 15, 8:00 AM – 12:00 PM": 1 } }
 ```
 
-`1` leaves the time up with one slot left, `2` removes it. The page merges this
-with the live counts and takes whichever is higher, so a manual entry can only
-ever remove availability, never add it back.
+`0` puts a time back on the list, `1` leaves one slot, `2` removes it. A time
+listed here overrides the automatic count entirely — which is how you free a slot
+after a cancellation, since the automatic count only ever goes up.
 
 If both the function and `booked.json` fail, every time stays visible. It fails
 toward showing too much rather than hiding a time you could work.
