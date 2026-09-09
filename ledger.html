@@ -199,7 +199,7 @@ const TYPES = ["Pop-up","Tube frame","Panel","Wood","Custom"];
 const STATUSES = ["Needs a time","Quoted","Booked","Built","Taken down"];
 const TOKEN_KEY = "ch-ledger-token";
 
-let jobs = [], openDay = 15, view = { mode:"day", id:null };
+let jobs = [], openDay = 15, view = { mode:"day", id:null }, lastLoad = null;
 const app = document.getElementById("app");
 const msgEl = document.getElementById("msg");
 
@@ -221,6 +221,7 @@ function setToken(v){ try { v ? localStorage.setItem(TOKEN_KEY, v) : localStorag
 
 async function api(path, opts = {}){
   const res = await fetch("/.netlify/functions/" + path, {
+    cache: "no-store",                 // never let a phone serve a stale job list
     ...opts,
     headers: { "content-type": "application/json", "x-ledger-token": token(), ...(opts.headers||{}) },
   });
@@ -288,8 +289,16 @@ function renderStrip(){
     }
   }
   return `<div class="cal"><div class="cal-hd"><h2>Sep 15 &ndash; 24, 2026</h2>
+    <span class="lbl" id="freshness"></span>
     <button class="act cancel" type="button" data-refresh="1">Refresh</button></div>
     <div class="strip">${html}</div></div>`;
+}
+
+function stamp(){
+  const el = document.getElementById("freshness");
+  if (el && lastLoad){
+    el.textContent = "updated " + lastLoad.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+  }
 }
 
 function jobButton(j){
@@ -336,6 +345,7 @@ function renderDay(d){
     `<div class="panel"><div class="panel-hd"><h3>${DOW[d]} Sep ${d}</h3>
       <span class="lbl">${work.half ? "Half day — mornings only" : "Three time slots"}</span></div>
       <div class="slots">${rows}</div></div>` + waitingBlock;
+  stamp();
 }
 
 function renderJob(id){
@@ -492,6 +502,7 @@ async function load(render = true){
   try {
     const body = await api("jobs");
     jobs = body.jobs || [];
+    lastLoad = new Date();
     msg("");
     if (render){
       if (view.mode === "job" && jobs.some(j => j.id === view.id)) renderJob(view.id);
