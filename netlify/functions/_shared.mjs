@@ -162,24 +162,6 @@ export async function readNote() {
   }
 }
 
-/** Write one job. Touches only that job's key. */
-export async function writeJob(job) {
-  await store().setJSON(PREFIX + job.id, job);
-}
-
-/** Remove one job, from both the new layout and any legacy leftovers. */
-export async function deleteJob(id) {
-  const s = store();
-  await s.delete(PREFIX + id).catch(() => {});
-  try {
-    const legacy = await s.get(KEY, { type: "json" });
-    if (legacy && legacy[id]) {
-      delete legacy[id];
-      await s.setJSON(KEY, legacy);
-    }
-  } catch { /* no legacy blob */ }
-}
-
 /** How many of a window's slots are used. A job can hold both. */
 export function countsFrom(jobs) {
   const out = {};
