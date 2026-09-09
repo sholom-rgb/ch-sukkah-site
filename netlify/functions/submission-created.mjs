@@ -1,4 +1,4 @@
-import { readJobs, writeJobs, slotKeyFromLabel, newId, json, countsFrom, CAP } from "./_shared.mjs";
+import { readJobs, writeJob, slotKeyFromLabel, newId, json, countsFrom, CAP } from "./_shared.mjs";
 
 export default async (req) => {
   let body;
@@ -30,7 +30,7 @@ export default async (req) => {
 
   async function add(all, extra) {
     const id = newId();
-    all[id] = {
+    const job = {
       id,
       slot: extra.slot,
       name: (data.name || "").trim() || "No name given",
@@ -44,7 +44,7 @@ export default async (req) => {
       createdAt: new Date().toISOString(),
       source: payload.form_name || "website",
     };
-    await writeJobs(all);
-    return json({ ok: true, id, slot: all[id].slot });
+    await writeJob(job);
+    return json({ ok: true, id, slot: job.slot });
   }
 };

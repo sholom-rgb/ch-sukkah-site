@@ -27,20 +27,58 @@ export function slotKeyFromLabel(label) {
   return day + "-" + idx;
 }
 
+// Strong consistency: a read must see writes that already happened, or a
+// booking can act on a stale picture.
 export function store() {
-  return getStore("bookings");
+  return getStore({ name: "bookings", consistency: "strong" });
 }
 
+const PREFIX = "job/";
+
+/**
+ * Each job is its own blob. Nothing does read-modify-write on a shared list,
+ * so two bookings landing at once cannot erase each other — which is exactly
+ * what a single "all the jobs" blob allowed.
+ */
 export async function readJobs() {
+  const s = store();
+  const out = {};
+
+  // Anything left in the old single-blob format still counts.
   try {
-    return (await store().get(KEY, { type: "json" })) || {};
-  } catch {
-    return {};
-  }
+    const legacy = await s.get(KEY, { type: "json" });
+    if (legacy && typeof legacy === "object") Object.assign(out, legacy);
+  } catch { /* nothing to migrate */ }
+
+  try {
+    const { blobs } = await s.list({ prefix: PREFIX });
+    const loaded = await Promise.all(
+      (blobs || []).map((b) =>
+        s.get(b.key, { type: "json" }).catch(() => null)
+      )
+    );
+    loaded.forEach((j) => { if (j && j.id) out[j.id] = j; });
+  } catch { /* fall back to whatever the legacy blob held */ }
+
+  return out;
 }
 
-export async function writeJobs(jobs) {
-  await store().setJSON(KEY, jobs);
+/** Write one job. Touches only that job's key. */
+export async function writeJob(job) {
+  await store().setJSON(PREFIX + job.id, job);
+}
+
+/** Remove one job, from both the new layout and any legacy leftovers. */
+export async function deleteJob(id) {
+  const s = store();
+  await s.delete(PREFIX + id).catch(() => {});
+  try {
+    const legacy = await s.get(KEY, { type: "json" });
+    if (legacy && legacy[id]) {
+      delete legacy[id];
+      await s.setJSON(KEY, legacy);
+    }
+  } catch { /* no legacy blob */ }
 }
 
 /** How many of a window's slots are used. A job can hold both. */

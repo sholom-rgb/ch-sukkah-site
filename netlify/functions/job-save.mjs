@@ -1,4 +1,4 @@
-import { readJobs, writeJobs, authorize, json, newId, countsFrom, CAP } from "./_shared.mjs";
+import { readJobs, writeJob, authorize, json, newId, countsFrom, CAP } from "./_shared.mjs";
 
 const NUM = ["charged", "materials", "helper", "gas"];
 const STR = ["name", "phone", "addr", "type", "size", "hrs", "status", "note"];
@@ -34,7 +34,6 @@ export default async (req) => {
   if (!job.name) job.name = "No name given";
   if (!job.status) job.status = slot ? "Booked" : "Needs a time";
 
-  jobs[id] = job;
-  await writeJobs(jobs);
+  await writeJob(job);
   return json({ ok: true, job });
 };
