@@ -317,12 +317,20 @@ function renderDay(d){
       <div style="margin-top:${list.length?"9px":"0"}">${tail}</div></div>`;
   }).join("");
 
+  // Always on the page, so there's a known place to look even when it's empty.
   const waiting = unslotted();
-  const waitingBlock = waiting.length ? `<div class="panel">
+  const waitingBlock = `<div class="panel">
     <div class="panel-hd"><h3>Needs a time</h3>
-      <span class="lbl">${waiting.length} waiting</span></div>
-    <div class="slots"><div class="slotrow"><div class="jobs">
-      ${waiting.map(jobButton).join("")}</div></div></div></div>` : "";
+      <span class="lbl">${waiting.length ? waiting.length + " waiting" : "nobody waiting"}</span></div>
+    <div class="slots"><div class="slotrow">
+      ${waiting.length
+        ? `<div class="jobs">${waiting.map(jobButton).join("")}</div>`
+        : `<p class="taken" style="margin:0 0 9px">Anyone who asks for a different time,
+           or books a slot that filled first, lands here.</p>`}
+      <div style="margin-top:${waiting.length ? "9px" : "0"}">
+        <button type="button" class="addbtn" data-newfree="1">+ Add someone without a time</button>
+      </div>
+    </div></div></div>`;
 
   app.innerHTML = renderStats() + renderStrip() +
     `<div class="panel"><div class="panel-hd"><h3>${DOW[d]} Sep ${d}</h3>
@@ -502,6 +510,7 @@ document.addEventListener("click", async ev => {
   if ((t = ev.target.closest("button.cell"))) return renderDay(+t.dataset.day);
   if ((t = ev.target.closest("[data-job]")))  return renderJob(t.dataset.job);
   if ((t = ev.target.closest("[data-new]")))  return renderForm(t.dataset.new, null);
+  if ((t = ev.target.closest("[data-newfree]"))) return renderForm(null, null);
   if ((t = ev.target.closest("[data-back]"))) return renderDay(openDay);
   if ((t = ev.target.closest("[data-edit]"))){
     const j = jobs.find(x => x.id === t.dataset.edit);
