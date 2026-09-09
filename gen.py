@@ -15,7 +15,7 @@ DAYS = [
     ("Tue Sep 15", ["am", "mid", "pm"], None),
     ("Wed Sep 16", ["am", "mid", "pm"], None),
     ("Thu Sep 17", ["am", "mid", "pm"], None),
-    ("Fri Sep 18", ["am"],              "Half day"),
+    ("Fri Sep 18", ["am"],              None),
     ("Tue Sep 22", ["am", "mid", "pm"], None),
     ("Wed Sep 23", ["am", "mid", "pm"], None),
     ("Thu Sep 24", ["am", "mid", "pm"], None),
