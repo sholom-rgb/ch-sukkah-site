@@ -1,34 +1,46 @@
 # C.H. Sukkah Building — booking site
 
-Static site. No build step. Netlify serves this folder as-is.
+Static pages plus two Netlify Functions. No build step for the HTML; Netlify
+installs the function dependencies from `package.json`.
 
-## Marking a time as taken
+## How a booking claims its time, automatically
 
-Edit `booked.json` and add the slot's exact text to the `full` list:
+1. Someone submits the `sukkah-booking` form.
+2. Netlify fires the `submission-created` event.
+3. `netlify/functions/submission-created.mjs` runs, reads the chosen time out of
+   the submission, and increments its count in the Netlify Blobs store.
+4. `netlify/functions/booked.mjs` serves those counts at
+   `/.netlify/functions/booked`.
+5. The page reads that on load. A time at 2 disappears; when every time on a day
+   is gone, the whole day disappears.
+
+Nothing to accept and nothing to edit by hand.
+
+## Marking a time taken yourself
+
+`booked.json` still works as a manual override — useful for a job booked over the
+phone:
 
 ```json
-{ "full": ["Tue Sep 15, 8:00 AM – 12:00 PM"] }
+{ "taken": { "Tue Sep 15, 8:00 AM – 12:00 PM": 1 } }
 ```
 
-Copy the text verbatim from the page — the time range uses an en-dash (–), not a
-hyphen. Commit and push; Netlify redeploys and the slot disappears from both the
-tap-to-WhatsApp list and the form's dropdown. When every slot on a day is taken,
-the whole day disappears.
+`1` leaves the time up with one slot left, `2` removes it. The page merges this
+with the live counts and takes whichever is higher, so a manual entry can only
+ever remove availability, never add it back.
 
-If `booked.json` is missing or malformed the site shows every slot. It fails toward
-showing too much, never toward hiding a time you could actually work.
+If both the function and `booked.json` fail, every time stays visible. It fails
+toward showing too much rather than hiding a time you could work.
 
-## Where bookings arrive
+## Where submissions land
 
-Form submissions land in the Netlify dashboard under **Forms → sukkah-booking**.
-Set up an email notification there so they reach you without checking the site.
-
-Netlify detects the form by parsing the HTML at deploy time, which is why every
-slot and field is written into `index.html` rather than generated in the browser.
+Netlify dashboard → **Forms** → `sukkah-booking` and `sukkah-other-time`.
+Form detection must stay enabled, and it only applies to builds made after it was
+switched on.
 
 ## Changing dates, times, or slots
 
-Edit the `DAYS`, `SLOTS`, and `TYPES` tables at the top of `gen.py`, then:
+Edit `DAYS`, `SLOTS` and `PER_SLOT` at the top of `gen.py`, then:
 
 ```
 python3 gen.py

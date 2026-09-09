@@ -142,7 +142,7 @@
 <div class="wrap">
 <p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>
 <h1>Pick a time for your sukkah</h1>
-<p class="how">Tap the time you want and fill in your details right there. We&rsquo;ll confirm it.</p>
+<p class="how">Tap the time you want and fill in your details right there. The time is yours as soon as you send it &mdash; taken times come off the list automatically.</p>
 <div class="stats" id="stats"></div>
 <div class="board">
 <section class="day">
@@ -260,23 +260,43 @@
   }
   renderStats();
 
-  // A window with all its slots taken comes off the board. Missing or bad
-  // file: everything stays visible, which fails toward showing too much.
-  fetch("booked.json", {cache:"no-store"}).then(function(r){
-    return r.ok ? r.json() : null;
-  }).then(function(data){
-    var taken = (data && data.taken) || {};
+  // Availability comes from the live store, which the booking function writes
+  // to the moment a form is submitted. booked.json stays as a manual override
+  // you can still edit by hand; whichever says a time is fuller wins. If both
+  // fail, every time stays visible — it fails toward showing too much.
+  function merge(a, b){
+    var out = {};
+    [a, b].forEach(function(src){
+      Object.keys(src || {}).forEach(function(k){
+        out[k] = Math.max(out[k] || 0, src[k] || 0);
+      });
+    });
+    return out;
+  }
+  function grab(url){
+    return fetch(url, {cache:"no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .catch(function(){ return null; });
+  }
+
+  Promise.all([
+    grab("/.netlify/functions/booked"),
+    grab("booked.json")
+  ]).then(function(res){
+    var taken = merge((res[0] && res[0].taken) || {}, (res[1] && res[1].taken) || {});
     Object.keys(taken).forEach(function(key){
       if ((taken[key] || 0) < PER_SLOT) return;
       document.querySelectorAll('[data-slot="' + CSS.escape(key) + '"]').forEach(function(el){
-        el.remove();
+        // take the wrapper, so its drawer goes with it
+        var wrap = el.closest(".slotwrap");
+        (wrap || el).remove();
       });
     });
     document.querySelectorAll("section.day").forEach(function(sec){
       if (!sec.querySelector("button.slot")) sec.remove();
     });
     renderStats(taken);
-  }).catch(function(){ /* leave every time showing */ });
+  });
 
   // One form, moved into whichever time is tapped.
   var form   = document.querySelector('form[name="sukkah-booking"]');
