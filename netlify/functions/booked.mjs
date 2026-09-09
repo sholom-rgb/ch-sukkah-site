@@ -1,4 +1,4 @@
-import { readJobsDetailed, publicCounts, json, readNote } from "./_shared.mjs";
+import { readJobsDetailed, publicCounts, json, readNote, whereAmI } from "./_shared.mjs";
 
 // Public: which times are gone. `debug` carries no customer details — only
 // counts and error text — and comes out once this is diagnosed.
@@ -12,6 +12,7 @@ export default async (req) => {
       blobsListed: listed,
       errors,
       lastSubmission: await readNote(),
+      readingFrom: whereAmI(),
     };
   }
   return json(out);

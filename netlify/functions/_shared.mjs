@@ -83,9 +83,20 @@ export async function readJobs() {
 }
 
 /** Leaves a breadcrumb so a failed submission is visible instead of silent. */
+export function whereAmI() {
+  return {
+    deployId: process.env.DEPLOY_ID || null,
+    siteId: process.env.SITE_ID || null,
+    context: process.env.CONTEXT || null,
+    commit: (process.env.COMMIT_REF || "").slice(0, 7) || null,
+  };
+}
+
 export async function noteRun(record) {
   try {
-    await store().setJSON("diag/last", { at: new Date().toISOString(), ...record });
+    await store().setJSON("diag/last", {
+      at: new Date().toISOString(), ...whereAmI(), ...record,
+    });
   } catch { /* if even this fails, its absence is the signal */ }
 }
 
