@@ -40,27 +40,61 @@ const PREFIX = "job/";
  * so two bookings landing at once cannot erase each other — which is exactly
  * what a single "all the jobs" blob allowed.
  */
-export async function readJobs() {
+/**
+ * Reads every job AND reports what went wrong doing it. The previous version
+ * swallowed storage errors, so a failure was indistinguishable from "no
+ * bookings" — which is precisely what made this impossible to diagnose.
+ */
+export async function readJobsDetailed() {
   const s = store();
   const out = {};
+  const errors = [];
+  let listed = 0;
 
-  // Anything left in the old single-blob format still counts.
   try {
     const legacy = await s.get(KEY, { type: "json" });
     if (legacy && typeof legacy === "object") Object.assign(out, legacy);
-  } catch { /* nothing to migrate */ }
+  } catch (e) {
+    errors.push("legacy-get: " + (e?.message || String(e)));
+  }
 
   try {
-    const { blobs } = await s.list({ prefix: PREFIX });
+    const res = await s.list({ prefix: PREFIX });
+    const blobs = res?.blobs || [];
+    listed = blobs.length;
     const loaded = await Promise.all(
-      (blobs || []).map((b) =>
-        s.get(b.key, { type: "json" }).catch(() => null)
+      blobs.map((b) =>
+        s.get(b.key, { type: "json" }).catch((e) => {
+          errors.push("get " + b.key + ": " + (e?.message || String(e)));
+          return null;
+        })
       )
     );
     loaded.forEach((j) => { if (j && j.id) out[j.id] = j; });
-  } catch { /* fall back to whatever the legacy blob held */ }
+  } catch (e) {
+    errors.push("list: " + (e?.message || String(e)));
+  }
 
-  return out;
+  return { jobs: out, errors, listed };
+}
+
+export async function readJobs() {
+  return (await readJobsDetailed()).jobs;
+}
+
+/** Leaves a breadcrumb so a failed submission is visible instead of silent. */
+export async function noteRun(record) {
+  try {
+    await store().setJSON("diag/last", { at: new Date().toISOString(), ...record });
+  } catch { /* if even this fails, its absence is the signal */ }
+}
+
+export async function readNote() {
+  try {
+    return await store().get("diag/last", { type: "json" });
+  } catch (e) {
+    return { error: "could not read diagnostic: " + (e?.message || String(e)) };
+  }
 }
 
 /** Write one job. Touches only that job's key. */

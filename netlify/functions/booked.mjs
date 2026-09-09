@@ -1,8 +1,18 @@
-import { readJobs, publicCounts, json } from "./_shared.mjs";
+import { readJobsDetailed, publicCounts, json, readNote } from "./_shared.mjs";
 
-// Public: which times are gone. Derived from the jobs themselves, so a job you
-// give a whole window to also disappears from the public site.
-export default async () => {
-  const jobs = await readJobs();
-  return json({ taken: publicCounts(jobs), v: 2 });
+// Public: which times are gone. `debug` carries no customer details — only
+// counts and error text — and comes out once this is diagnosed.
+export default async (req) => {
+  const url = new URL(req.url);
+  const { jobs, errors, listed } = await readJobsDetailed();
+  const out = { taken: publicCounts(jobs), v: 3 };
+  if (url.searchParams.get("debug") === "1") {
+    out.debug = {
+      jobCount: Object.keys(jobs).length,
+      blobsListed: listed,
+      errors,
+      lastSubmission: await readNote(),
+    };
+  }
+  return json(out);
 };
