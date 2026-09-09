@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Jobs &amp; Profit — C.H. Sukkah Building</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  :root{
+    --paper:#ede5cf; --panel:#e4dabd; --ink:#17130f; --accent:#46215f;
+    --muted:#857f70; --rule:rgba(23,19,15,.20); --rule-2:rgba(23,19,15,.34);
+    --field:#f3ecda; --on-accent:#ede5cf;
+    --good:#2f6b43; --bad:#8c2f22; --warn-bg:rgba(199,154,61,.22); --warn-fg:#6b4d13;
+    --ghost:rgba(23,19,15,.05); --closed:rgba(23,19,15,.03);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#17130f; --panel:#221c16; --ink:#ede5cf; --accent:#c79a3d;
+      --muted:#9b9282; --rule:rgba(237,229,207,.18); --rule-2:rgba(237,229,207,.32);
+      --field:#2b241c; --on-accent:#17130f;
+      --good:#7fc79a; --bad:#e08b7c; --warn-bg:rgba(199,154,61,.28); --warn-fg:#f0d089;
+      --ghost:rgba(237,229,207,.06); --closed:rgba(237,229,207,.02);
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink); margin:0;
+    font-family:"Work Sans",system-ui,-apple-system,sans-serif;
+    font-size:15px; line-height:1.55; padding:24px 16px 60px;
+  }
+  .wrap{max-width:920px;margin:0 auto}
+  .eyebrow{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:11px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;
+  }
+  h1{
+    font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
+    font-size:clamp(30px,6.5vw,46px);line-height:1;margin:0 0 16px;letter-spacing:.005em;
+  }
+  .lbl{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:10px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  }
+  .msg{
+    border:1px solid var(--rule-2);background:var(--warn-bg);color:var(--warn-fg);
+    padding:12px 14px;margin:0 0 20px;font-size:14px;font-weight:600;
+  }
+  .msg:empty{display:none}
+
+  .gate{border:1px solid var(--rule-2);background:var(--panel);padding:20px;display:grid;gap:12px;max-width:420px}
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:1px;
+    background:var(--rule);border:1px solid var(--rule);margin:0 0 22px;
+  }
+  .stat{background:var(--paper);padding:13px 14px}
+  .stat .n{
+    font-family:Anton,Impact,sans-serif;font-size:27px;line-height:1;display:block;
+    margin-bottom:4px;font-variant-numeric:tabular-nums;
+  }
+  .stat .k{font-size:11.5px;color:var(--muted)}
+  .stat.profit .n{color:var(--good)}
+  .stat.profit .n.neg{color:var(--bad)}
+
+  .cal{border:1px solid var(--rule-2);background:var(--panel)}
+  .cal-hd{
+    padding:12px 15px;border-bottom:1px solid var(--rule-2);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  }
+  .cal-hd h2{
+    font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
+    font-size:21px;margin:0;letter-spacing:.01em;
+  }
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:1px;background:var(--rule)}
+  .cell{background:var(--panel);min-height:90px;padding:9px 8px;display:flex;flex-direction:column;gap:2px}
+  .cell.closed{background:var(--closed)}
+  .cell .dow{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:9.5px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  }
+  .cell .d{font-family:Anton,Impact,sans-serif;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+  .cell.closed .d{color:var(--muted)}
+  .cell .why{font-size:9px;line-height:1.25;color:var(--muted)}
+  button.cell{border:0;font-family:inherit;text-align:left;cursor:pointer;width:100%;color:inherit}
+  button.cell:hover,button.cell:focus-visible,button.cell[aria-current="true"]{background:var(--accent);color:var(--on-accent)}
+  button.cell:hover .dow,button.cell:focus-visible .dow,button.cell[aria-current="true"] .dow,
+  button.cell:hover .cnt,button.cell:focus-visible .cnt,button.cell[aria-current="true"] .cnt{
+    color:var(--on-accent);border-color:var(--on-accent);
+  }
+  .cnt{
+    margin-top:auto;font-family:"Space Mono",ui-monospace,monospace;font-size:9.5px;
+    font-weight:700;letter-spacing:.05em;border:1px solid var(--rule-2);
+    padding:2px 4px;align-self:flex-start;font-variant-numeric:tabular-nums;
+  }
+  .cnt.full{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+  .panel{border:1px solid var(--rule-2);background:var(--panel);margin-top:16px}
+  .panel-hd{
+    padding:13px 16px;border-bottom:1px solid var(--rule-2);
+    display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  }
+  .panel-hd h3{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:21px;margin:0}
+  .slots{display:flex;flex-direction:column;gap:1px;background:var(--rule)}
+  .slotrow{background:var(--panel);padding:13px 16px}
+  .slot-t{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:12.5px;font-weight:700;
+    letter-spacing:.03em;font-variant-numeric:tabular-nums;margin-bottom:9px;
+    display:flex;justify-content:space-between;gap:10px;align-items:center;
+  }
+  .jobs{display:flex;flex-direction:column;gap:7px}
+  button.job{
+    border:0;border-left:3px solid var(--accent);padding:8px 8px 8px 10px;font-size:13.5px;
+    display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+    width:100%;text-align:left;cursor:pointer;background:var(--ghost);color:inherit;font-family:inherit;
+  }
+  button.job:hover,button.job:focus-visible{background:var(--accent);color:var(--on-accent)}
+  button.job:hover .meta,button.job:focus-visible .meta,
+  button.job:hover .money,button.job:focus-visible .money{color:var(--on-accent)}
+  .job .who{font-weight:600;display:block}
+  .job .meta{color:var(--muted);font-size:11.5px;display:block}
+  .job .money{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:12px;white-space:nowrap;
+    font-variant-numeric:tabular-nums;color:var(--good);font-weight:700;
+  }
+  .job .money.neg{color:var(--bad)}
+  .addbtn{
+    width:100%;font-family:"Space Mono",ui-monospace,monospace;font-size:10.5px;
+    font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px;
+    cursor:pointer;background:transparent;border:1px dashed var(--rule-2);color:var(--muted);
+  }
+  .addbtn:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+  .taken{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:10px;font-weight:700;
+    letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+  }
+
+  .entry{padding:16px;display:grid;gap:11px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+  label{display:grid;gap:5px;font-size:12.5px;font-weight:600}
+  input,select,textarea{
+    font-family:inherit;font-size:16px;padding:10px 11px;width:100%;border-radius:0;
+    background:var(--field);color:var(--ink);border:1px solid var(--rule-2);
+  }
+  textarea{min-height:64px;resize:vertical}
+  input[inputmode=decimal]{font-family:"Space Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .ro{background:var(--field);border:1px solid var(--rule-2);padding:10px 11px;font-size:15px}
+  a.ro{color:inherit;text-decoration:none;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+  a.ro:hover{border-color:var(--accent);color:var(--accent)}
+  .hint{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:9.5px;font-weight:700;
+    letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;
+  }
+  a.ro:hover .hint{color:var(--accent)}
+  .calcrow{display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-size:14px}
+  .calcrow.total{border-top:1px solid var(--rule-2);margin-top:5px;padding-top:9px;font-weight:700;font-size:17px}
+  .calcrow .v{font-family:"Space Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .calcrow.total .v{color:var(--good)}
+  .calcrow.total .v.neg{color:var(--bad)}
+  .rowbtns{display:flex;gap:9px;margin-top:6px;flex-wrap:wrap}
+  button.act{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:10.5px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;padding:12px 14px;cursor:pointer;border:1px solid;
+  }
+  .save{background:var(--accent);color:var(--on-accent);border-color:var(--accent);flex:1}
+  .cancel{background:transparent;color:var(--muted);border-color:var(--rule-2)}
+  .del{background:transparent;color:var(--bad);border-color:var(--rule-2)}
+  .pill{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:9.5px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;
+    background:var(--ghost);border:1px solid var(--rule-2);
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">C.H. Sukkah Building &middot; Private</p>
+  <h1>Jobs &amp; profit</h1>
+  <div class="msg" id="msg"></div>
+  <div id="app"></div>
+</div>
+
+<script type="module">
+"use strict";
+
+const CAP = 2;
+const SLOTS = ["8:00 AM – 12:00 PM", "12:00 PM – 4:00 PM", "4:00 PM – 8:00 PM"];
+const FIRST = 15, LAST = 24;
+const DOW = {15:"Tue",16:"Wed",17:"Thu",18:"Fri",19:"Sat",20:"Sun",21:"Mon",22:"Tue",23:"Wed",24:"Thu"};
+const DAYS = {
+  15:{slots:[0,1,2]}, 16:{slots:[0,1,2]}, 17:{slots:[0,1,2]},
+  18:{slots:[0], half:true},
+  22:{slots:[0,1,2]}, 23:{slots:[0,1,2]}, 24:{slots:[0,1,2]}
+};
+const CLOSED = {19:"Shabbos", 20:"Erev Yom Kippur", 21:"Yom Kippur"};
+const TYPES = ["Pop-up","Tube frame","Panel","Wood","Custom"];
+const STATUSES = ["Needs a time","Quoted","Booked","Built","Taken down"];
+const TOKEN_KEY = "ch-ledger-token";
+
+let jobs = [], openDay = 15, view = { mode:"day", id:null };
+const app = document.getElementById("app");
+const msgEl = document.getElementById("msg");
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+const money = n => (n < 0 ? "−$" : "$") + Math.abs(Math.round(n)).toLocaleString("en-US");
+const costOf = j => num(j.materials) + num(j.helper) + num(j.gas);
+const profitOf = j => num(j.charged) - costOf(j);
+const slotsOf = j => Number(j.slots) === 2 ? 2 : 1;
+const inSlot = key => jobs.filter(j => j.slot === key);
+const usedIn = key => inSlot(key).reduce((n,j) => n + slotsOf(j), 0);
+const roomIn = key => CAP - usedIn(key);
+const unslotted = () => jobs.filter(j => !j.slot);
+const msg = t => { msgEl.textContent = t || ""; };
+
+function token(){ try { return localStorage.getItem(TOKEN_KEY) || ""; } catch { return ""; } }
+function setToken(v){ try { v ? localStorage.setItem(TOKEN_KEY, v) : localStorage.removeItem(TOKEN_KEY); } catch {} }
+
+async function api(path, opts = {}){
+  const res = await fetch("/.netlify/functions/" + path, {
+    ...opts,
+    headers: { "content-type": "application/json", "x-ledger-token": token(), ...(opts.headers||{}) },
+  });
+  const body = await res.json().catch(() => ({}));
+  if (res.status === 401){ setToken(""); throw { kind:"auth" }; }
+  if (res.status === 503){ throw { kind:"setup", message: body.message }; }
+  if (!res.ok) throw { kind:"other", message: body.message || body.error || ("HTTP " + res.status) };
+  return body;
+}
+
+function totalSlots(){
+  return Object.values(DAYS).reduce((n,d) => n + d.slots.length, 0) * CAP;
+}
+
+/* ---------- views ---------- */
+
+function renderGate(note){
+  app.innerHTML =
+    `<div class="gate">
+       <p class="lbl">This page is private</p>
+       <label>Passphrase<input type="password" id="pw" autocomplete="current-password"></label>
+       <div class="rowbtns"><button class="act save" id="go" type="button">Open the ledger</button></div>
+       ${note ? `<p style="color:var(--muted);font-size:13px;margin:0">${esc(note)}</p>` : ""}
+     </div>`;
+  const pw = document.getElementById("pw");
+  const go = async () => {
+    setToken(pw.value.trim());
+    msg("");
+    await load();
+  };
+  document.getElementById("go").addEventListener("click", go);
+  pw.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  pw.focus();
+}
+
+function renderStats(){
+  let rev = 0, cost = 0;
+  jobs.forEach(j => { rev += num(j.charged); cost += costOf(j); });
+  const prof = rev - cost;
+  const open = totalSlots() - jobs.reduce((n,j) => n + (j.slot ? slotsOf(j) : 0), 0);
+  return `<div class="stats">
+    <div class="stat"><span class="n">${jobs.length}</span><span class="k">Jobs</span></div>
+    <div class="stat"><span class="n">${open}</span><span class="k">Slots still open</span></div>
+    <div class="stat"><span class="n">${money(rev)}</span><span class="k">Revenue</span></div>
+    <div class="stat"><span class="n">${money(cost)}</span><span class="k">Costs</span></div>
+    <div class="stat profit"><span class="n${prof<0?" neg":""}">${money(prof)}</span><span class="k">Profit</span></div>
+  </div>`;
+}
+
+function renderStrip(){
+  let html = "";
+  for (let d = FIRST; d <= LAST; d++){
+    const work = DAYS[d];
+    if (work){
+      const filled = work.slots.reduce((n,s) => n + inSlot(d+"-"+s).length, 0);
+      const cap = work.slots.length * CAP;
+      const full = work.slots.every(s => roomIn(d+"-"+s) <= 0);
+      html += `<button type="button" class="cell" data-day="${d}" aria-current="${d===openDay}">
+        <span class="dow">${DOW[d]}</span><span class="d">${d}</span>
+        ${work.half ? '<span class="why">Half day</span>' : ""}
+        <span class="cnt${full?" full":""}">${filled}/${cap}</span></button>`;
+    } else {
+      html += `<div class="cell closed"><span class="dow">${DOW[d]}</span>
+        <span class="d">${d}</span><span class="why">${CLOSED[d]}</span></div>`;
+    }
+  }
+  return `<div class="cal"><div class="cal-hd"><h2>Sep 15 &ndash; 24, 2026</h2>
+    <button class="act cancel" type="button" data-refresh="1">Refresh</button></div>
+    <div class="strip">${html}</div></div>`;
+}
+
+function jobButton(j){
+  const p = profitOf(j);
+  const bits = [j.type, j.hrs ? j.hrs+" hrs" : "", slotsOf(j)===2 ? "whole window" : "", j.addr]
+    .filter(Boolean).join(" · ");
+  return `<button type="button" class="job" data-job="${esc(j.id)}">
+    <span><span class="who">${esc(j.name)}</span><span class="meta">${esc(bits)}</span></span>
+    <span class="money${p<0?" neg":""}">${money(p)}</span></button>`;
+}
+
+function renderDay(d){
+  view = { mode:"day", id:null };
+  openDay = d;
+  const work = DAYS[d];
+  const rows = work.slots.map(s => {
+    const key = d+"-"+s;
+    const list = inSlot(key);
+    const tail = roomIn(key) <= 0
+      ? '<span class="taken">Both slots taken</span>'
+      : `<button type="button" class="addbtn" data-new="${key}">+ Enter customer</button>`;
+    return `<div class="slotrow"><div class="slot-t"><span>${SLOTS[s]}</span>
+      <span class="taken">${usedIn(key)} of ${CAP}</span></div>
+      ${list.length ? `<div class="jobs">${list.map(jobButton).join("")}</div>` : ""}
+      <div style="margin-top:${list.length?"9px":"0"}">${tail}</div></div>`;
+  }).join("");
+
+  const waiting = unslotted();
+  const waitingBlock = waiting.length ? `<div class="panel">
+    <div class="panel-hd"><h3>Needs a time</h3>
+      <span class="lbl">${waiting.length} waiting</span></div>
+    <div class="slots"><div class="slotrow"><div class="jobs">
+      ${waiting.map(jobButton).join("")}</div></div></div></div>` : "";
+
+  app.innerHTML = renderStats() + renderStrip() +
+    `<div class="panel"><div class="panel-hd"><h3>${DOW[d]} Sep ${d}</h3>
+      <span class="lbl">${work.half ? "Half day — mornings only" : "Three time slots"}</span></div>
+      <div class="slots">${rows}</div></div>` + waitingBlock;
+}
+
+function renderJob(id){
+  const j = jobs.find(x => x.id === id);
+  if (!j) return renderDay(openDay);
+  view = { mode:"job", id };
+  const p = profitOf(j);
+  const bits = [j.type, j.size, j.hrs ? j.hrs+" hrs" : ""].filter(Boolean).join(" · ");
+  const when = j.slot
+    ? `Sep ${j.slot.split("-")[0]} · ${SLOTS[+j.slot.split("-")[1]]}`
+    : "No time yet";
+  app.innerHTML = renderStats() + renderStrip() +
+    `<div class="panel"><div class="panel-hd"><h3>${esc(j.name)}</h3>
+      <span class="pill">${esc(j.status || "Booked")}</span></div>
+    <div class="entry">
+      <span class="lbl">${esc(when)}</span>
+      ${j.phone ? `<a class="ro" href="tel:${esc(String(j.phone).replace(/[^0-9+]/g,""))}">
+        ${esc(j.phone)}<span class="hint">Tap to call</span></a>` : ""}
+      ${j.addr ? `<a class="ro" href="https://maps.google.com/?q=${encodeURIComponent(j.addr)}"
+        target="_blank" rel="noopener noreferrer">${esc(j.addr)}<span class="hint">Directions</span></a>` : ""}
+      ${bits ? `<div class="ro">${esc(bits)}</div>` : ""}
+      ${j.note ? `<div class="ro">${esc(j.note)}</div>` : ""}
+      ${slotsOf(j)===2 ? '<div class="ro">This job has the whole window — nobody else can book it.</div>' : ""}
+      <span class="lbl" style="margin-top:6px">Money</span>
+      <div class="calcrow"><span>Charged</span><span class="v">${money(num(j.charged))}</span></div>
+      ${num(j.materials) ? `<div class="calcrow"><span>Materials</span><span class="v">−${money(num(j.materials))}</span></div>` : ""}
+      ${num(j.helper) ? `<div class="calcrow"><span>Helper</span><span class="v">−${money(num(j.helper))}</span></div>` : ""}
+      ${num(j.gas) ? `<div class="calcrow"><span>Gas / delivery</span><span class="v">−${money(num(j.gas))}</span></div>` : ""}
+      <div class="calcrow total"><span>Profit on this job</span>
+        <span class="v${p<0?" neg":""}">${money(p)}</span></div>
+      <div class="rowbtns">
+        <button class="act save" type="button" data-edit="${esc(j.id)}">Edit</button>
+        <button class="act cancel" type="button" data-move="${esc(j.id)}">${j.slot ? "Reschedule" : "Give it a time"}</button>
+        ${j.slot ? `<button class="act cancel" type="button" data-whole="${esc(j.id)}">
+          ${slotsOf(j)===2 ? "Free up the second slot" : "Give it the whole window"}</button>` : ""}
+        <button class="act cancel" type="button" data-back="1">Back</button>
+        <button class="act del" type="button" data-del="${esc(j.id)}">Delete</button>
+      </div>
+    </div></div>`;
+}
+
+function renderMove(id){
+  const j = jobs.find(x => x.id === id);
+  if (!j) return renderDay(openDay);
+  view = { mode:"move", id };
+  const need = slotsOf(j);
+  let body = "";
+  for (let d = FIRST; d <= LAST; d++){
+    const work = DAYS[d];
+    if (!work) continue;
+    const rows = work.slots.map(sn => {
+      const key = d+"-"+sn;
+      const here = key === j.slot;
+      const free = CAP - usedIn(key) + (here ? need : 0);
+      const can = free >= need && !here;
+      return `<button type="button" class="job" ${can ? `data-moveto="${esc(id)}|${key}"` : "disabled"}
+        style="${can?"":"opacity:.45;cursor:not-allowed;"}">
+        <span><span class="who">${SLOTS[sn]}</span>
+        <span class="meta">${here ? "where it is now" : free >= need ? free+" of "+CAP+" free" : "no room"}</span></span></button>`;
+    }).join("");
+    body += `<div class="slotrow"><div class="slot-t"><span>${DOW[d]} Sep ${d}</span></div>
+      <div class="jobs">${rows}</div></div>`;
+  }
+  app.innerHTML = `<div class="panel"><div class="panel-hd"><h3>Move ${esc(j.name)}</h3>
+    <span class="lbl">${need===2 ? "needs a whole window" : "needs one slot"}</span></div>
+    <div class="slots">${body}</div>
+    <div class="entry"><div class="rowbtns">
+      <button class="act cancel" type="button" data-job="${esc(id)}">Cancel</button>
+    </div></div></div>`;
+}
+
+function fieldRow(label, name, val, attrs){
+  return `<label>${label}<input name="${name}" value="${esc(val ?? "")}" ${attrs || ""}></label>`;
+}
+function pickRow(label, name, val, opts){
+  return `<label>${label}<select name="${name}">${
+    opts.map(o => `<option${o===val?" selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
+}
+
+function renderForm(key, existing){
+  view = { mode:"form", id: existing ? existing.id : null };
+  const j = existing || {};
+  const when = key ? `Sep ${key.split("-")[0]} · ${SLOTS[+key.split("-")[1]]}` : "No time yet";
+  app.innerHTML = `<div class="panel"><div class="panel-hd">
+    <h3>${existing ? "Edit job" : "New job"}</h3><span class="lbl">${esc(when)}</span></div>
+    <form class="entry" id="jobform">
+      <span class="lbl">Customer</span>
+      ${fieldRow("Name","name",j.name,'required autocomplete="off"')}
+      <div class="grid2">
+        ${fieldRow("Phone","phone",j.phone,'type="tel" autocomplete="off"')}
+        ${fieldRow("Address","addr",j.addr,'autocomplete="off"')}
+      </div>
+      <span class="lbl" style="margin-top:6px">The build</span>
+      <div class="grid2">
+        ${pickRow("Type","type",j.type || TYPES[0],TYPES)}
+        ${fieldRow("Size","size",j.size,'placeholder="e.g. 8×10" autocomplete="off"')}
+        ${fieldRow("Hours","hrs",j.hrs,'inputmode="decimal" autocomplete="off"')}
+        ${pickRow("Status","status",j.status || (key ? "Booked" : "Needs a time"),STATUSES)}
+      </div>
+      <span class="lbl" style="margin-top:6px">Money — fill what you use</span>
+      <div class="grid2">
+        ${fieldRow("Charging","charged",j.charged,'inputmode="decimal" autocomplete="off"')}
+        ${fieldRow("Materials","materials",j.materials,'inputmode="decimal" autocomplete="off"')}
+        ${fieldRow("Helper","helper",j.helper,'inputmode="decimal" autocomplete="off"')}
+        ${fieldRow("Gas / delivery","gas",j.gas,'inputmode="decimal" autocomplete="off"')}
+      </div>
+      <div class="calcrow total"><span>Profit</span><span class="v" id="live">$0</span></div>
+      <label>Notes<textarea name="note">${esc(j.note || "")}</textarea></label>
+      <div class="rowbtns">
+        <button class="act save" type="submit">Save job</button>
+        <button class="act cancel" type="button" data-back="1">Cancel</button>
+      </div>
+    </form></div>`;
+
+  const form = document.getElementById("jobform");
+  const live = document.getElementById("live");
+  const recalc = () => {
+    const f = new FormData(form);
+    const p = num(f.get("charged")) - num(f.get("materials")) - num(f.get("helper")) - num(f.get("gas"));
+    live.textContent = money(p);
+    live.className = "v" + (p < 0 ? " neg" : "");
+  };
+  form.addEventListener("input", recalc);
+  recalc();
+  form.querySelector('[name=name]').focus({preventScroll:true});
+
+  form.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const f = new FormData(form);
+    const body = { id: existing?.id, slot: key, slots: existing ? slotsOf(existing) : 1 };
+    ["name","phone","addr","type","size","hrs","status","note"].forEach(k => body[k] = f.get(k) || "");
+    ["charged","materials","helper","gas"].forEach(k => body[k] = num(f.get(k)));
+    if (!body.name.trim()) return;
+    await run(() => api("job-save", { method:"POST", body: JSON.stringify(body) }),
+              () => key ? renderDay(+key.split("-")[0]) : renderDay(openDay));
+  });
+}
+
+/* ---------- plumbing ---------- */
+
+async function run(fn, after){
+  try {
+    await fn();
+    await load(false);
+    if (after) after();
+  } catch (e){
+    if (e.kind === "auth") return renderGate("That passphrase didn't work.");
+    if (e.kind === "setup") return renderGate(e.message);
+    msg(e.message || "Something went wrong. Try again.");
+  }
+}
+
+async function load(render = true){
+  try {
+    const body = await api("jobs");
+    jobs = body.jobs || [];
+    msg("");
+    if (render){
+      if (view.mode === "job" && jobs.some(j => j.id === view.id)) renderJob(view.id);
+      else renderDay(openDay);
+    }
+  } catch (e){
+    if (e.kind === "auth") return renderGate(token() ? "That passphrase didn't work." : "");
+    if (e.kind === "setup") return renderGate(e.message);
+    msg(e.message || "Couldn't reach your jobs.");
+  }
+}
+
+document.addEventListener("click", async ev => {
+  let t;
+  if ((t = ev.target.closest("[data-refresh]"))) return load();
+  if ((t = ev.target.closest("button.cell"))) return renderDay(+t.dataset.day);
+  if ((t = ev.target.closest("[data-job]")))  return renderJob(t.dataset.job);
+  if ((t = ev.target.closest("[data-new]")))  return renderForm(t.dataset.new, null);
+  if ((t = ev.target.closest("[data-back]"))) return renderDay(openDay);
+  if ((t = ev.target.closest("[data-edit]"))){
+    const j = jobs.find(x => x.id === t.dataset.edit);
+    return j ? renderForm(j.slot, j) : renderDay(openDay);
+  }
+  if ((t = ev.target.closest("[data-move]"))) return renderMove(t.dataset.move);
+  if ((t = ev.target.closest("[data-moveto]"))){
+    const [id, slot] = t.dataset.moveto.split("|");
+    openDay = +slot.split("-")[0];
+    return run(() => api("job-save", { method:"POST", body: JSON.stringify({ id, slot }) }),
+               () => renderJob(id));
+  }
+  if ((t = ev.target.closest("[data-whole]"))){
+    const id = t.dataset.whole;
+    const j = jobs.find(x => x.id === id);
+    if (!j) return;
+    const want = slotsOf(j) === 2 ? 1 : 2;
+    if (want === 2 && usedIn(j.slot) - 1 > 0){
+      msg("Someone else is already in that window — move them first.");
+      return renderJob(id);
+    }
+    return run(() => api("job-save", { method:"POST", body: JSON.stringify({ id, slots: want }) }),
+               () => renderJob(id));
+  }
+  if ((t = ev.target.closest("[data-del]"))){
+    const j = jobs.find(x => x.id === t.dataset.del);
+    if (!confirm("Delete " + (j ? j.name : "this job") + "? This can't be undone.")) return;
+    return run(() => api("job-delete", { method:"POST", body: JSON.stringify({ id: t.dataset.del }) }),
+               () => renderDay(openDay));
+  }
+});
+
+if (!token()) renderGate();
+else load();
+</script>
+</body>
+</html>
