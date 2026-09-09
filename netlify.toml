@@ -6,3 +6,9 @@
   for = "/booked.json"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# The ledger must never run from a stale copy on a phone.
+[[headers]]
+  for = "/ledger.html"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"

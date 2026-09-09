@@ -197,9 +197,7 @@ def build_index():
 
     o.write('<div id="form-home" hidden>\n')
     o.write('<form name="sukkah-booking" method="POST" data-netlify="true" '
-            'netlify-honeypot="bot-field" action="/thanks.html">\n')
-    o.write('  <p class="hp"><label>Skip this field <input name="bot-field" '
-            'tabindex="-1" autocomplete="off"></label></p>\n')
+            'action="/thanks.html">\n')
     o.write('  <input type="hidden" name="time" id="time-field" value="">\n')
     o.write('  <label>Your name<input type="text" name="name" required '
             'autocomplete="name"></label>\n')
@@ -216,9 +214,7 @@ def build_index():
     o.write('<p class="lede">Tell us the days and times that suit you and we&rsquo;ll '
             'do our best to fit you in.</p>\n')
     o.write('<form name="sukkah-other-time" method="POST" data-netlify="true" '
-            'netlify-honeypot="bot-field" action="/thanks.html">\n')
-    o.write('  <p class="hp"><label>Skip this field <input name="bot-field" '
-            'tabindex="-1" autocomplete="off"></label></p>\n')
+            'action="/thanks.html">\n')
     o.write('  <label>Your name<input type="text" name="name" required '
             'autocomplete="name"></label>\n')
     o.write('  <label>Phone<input type="tel" name="phone" required '
