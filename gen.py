@@ -176,9 +176,6 @@ def build_index():
     o.write('<div class="wrap">\n')
     o.write('<p class="eyebrow">C.H. Sukkah Building &middot; Brooklyn, New York</p>\n')
     o.write('<h1>Pick a time for your sukkah</h1>\n')
-    o.write('<p class="how">Tap the time you want and fill in your details right '
-            'there. The time is yours as soon as you send it &mdash; taken times '
-            'come off the list automatically.</p>\n')
     o.write('<div class="stats" id="stats"></div>\n')
 
     o.write('<div class="board">\n')
